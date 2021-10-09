@@ -18,4 +18,8 @@ Activity设置为SingleTask之后 如果当前Activity实例位于栈顶，则�
 > singleInstance
 属于SingleTask的加强型，设置singleInstance之后 activity实例只能单独运行在一个任务栈中，这个任务栈只有当前activity实例存在
 
+* 2 Activity 启动流程
+
+
+
 
