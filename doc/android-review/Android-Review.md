@@ -86,7 +86,7 @@ Activity设置为SingleTask之后 如果当前Activity实例位于栈顶，则�
 
 > Looper 位置一个无限for循环，不断的从messageQuene中去取message 一旦messageQuene为空则阻塞 
 
-* ## 8. Android  Handler机制
+* ## 9.Android
 
 
 
