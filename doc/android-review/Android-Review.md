@@ -2,6 +2,34 @@
 
 ### Android 基础
 
+* ##  Andrid四大组件
+- Activity 生命周期 onCreate() onDestroy() onStart() onStop() onPase() onResume() onRestart()
+- Service
+- ContentProvider
+- BroadCastReceiver
+
+* ##  Activity之间传值
+> 通过Intent传值 大小限制在1M之内最好不要打过 512K 
+> 可以通过 EventBus
+
+* ##  Activity横竖屏切换
+> 如果Activity需要配置 configChanges 配置完毕只走 onConfigChange();
+
+* ## Activity上有Dialog的时候按Home键时的生命周期
+> 按下Home键后 走哦onPause() onStop()
+
+* ##  两个Activity 之间跳转时必然会执行的是哪几个方法？
+> activity onstop onstart() 
+
+* ## Activity状态保存于恢复
+
+- onSaveInstanceState() 用来保存Activity销毁前的数据
+
+- onRestoreInstanceState() 用来恢复之前保存的值
+
+
+
+
 * ## 1 Activity的启动模式
 
 Activity 有四种启动模式分别是

@@ -17,6 +17,7 @@ https://www.jianshu.com/p/fbe2320e57fa
 
 * ## 3. int Integer 的区别
 > int 是基本数据类型 Integer是int 的包装类
+
 * ## 4. String StringBuilder StringBuffer 区别
 - String 是final修饰的类是不可变的对象每次变化都要新建一个对象。字符串变化比较大不推荐使用。
 - StringBuffer是线程安全的但是效率低
@@ -40,12 +41,12 @@ https://www.jianshu.com/p/fbe2320e57fa
 当老年代内存区域不足时候 触发一次 FullGC（标记整理算法）
 
 * ## 5. Java 中的锁
-  java中常见的锁的实现有两种 synchronized 关键字和Lock
+  java中常见的锁的实现有两种 synchronized 关键字和Lock，synchronized是JVM层的而Lock是api层的
   - synchronized 是一个非公平的，悲观，独享，互斥，可重入的重量级锁
   - ReentrantLock：默认非公平但可实现公平的，悲观，独享，互斥，可重入，重量级锁
   - ReentrantReadWriteLock: 默认非公平但可实现公平的，悲观，写独享，读共享，读写，可重入，重量级锁
    
-- synchionized 关键字是JVM提供的，synchironized修饰的代码块或者方法会在对应的字节码文件中生成 monitorenter和 moniterexit 两个字节码命令。获取对象锁时候 monitorenter
+- synchionized 关键字是JVM提供的，synchironized修饰的代码块或者方法会在对应的字节码文件中生成 monitorenter和 moniterexit 两个字节码命令。当线程获取monitor对象锁的时候计数器加1，调用moitterexit()的时候，计数器减1，只有当计数器为
   
 - ## 5. volatile关键字
 - 可见性 写入一个volatile 变量时 强制他写入到内存中，读取一个volatile变量时，强制他读取内存中的数据
@@ -54,5 +55,31 @@ https://www.jianshu.com/p/fbe2320e57fa
 
 JVM 要保证“完全可见性”？由于缓存和指令重排等机制，我们对程序执行顺序和执行结果的预期，可能跟真实的执行顺序和结果并不相同。
 
+- ## 6. 开启线程的三种方式？
+- 继承自Threadl类 调用run()方法
+- 实现Runnable接口 
+-  callable Feture()
+
+- ## . 如何实现同步
+- 通过同步方法
+- 通过同步代码块
+- 通过volatile 关键字修饰变量
+- 通过Lock 
+
+- ## . 线程之间操作List
+- 通过线程安全的vector
+- 通过线程安全的CopyonWriteList来操作
+- 
+
+
+
+- ## . 线程和进程的区别
+  - 线程是调度和分配的基本单元，进程作为拥有资源的基本单位
+  - 进程的创建和撤销，远远大于线程的开销
+
+- ## . 两个进程同时要求写或者读，能不能实现？如何防止进程的同步？
+> 两个进程同时读取文件或者写入文件可以通过FileLock来实现，
+- ## . Android系统中的同步和互斥
+> Android系统提供了 Mutex Condition(条件锁) Barrier ，
 
 
