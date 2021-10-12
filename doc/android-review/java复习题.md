@@ -44,5 +44,15 @@ https://www.jianshu.com/p/fbe2320e57fa
   - synchronized 是一个非公平的，悲观，独享，互斥，可重入的重量级锁
   - ReentrantLock：默认非公平但可实现公平的，悲观，独享，互斥，可重入，重量级锁
   - ReentrantReadWriteLock: 默认非公平但可实现公平的，悲观，写独享，读共享，读写，可重入，重量级锁
+   
+- synchionized 关键字是JVM提供的，synchironized修饰的代码块或者方法会在对应的字节码文件中生成 monitorenter和 moniterexit 两个字节码命令。获取对象锁时候 monitorenter
+  
+- ## 5. volatile关键字
+- 可见性 写入一个volatile 变量时 强制他写入到内存中，读取一个volatile变量时，强制他读取内存中的数据
+- 指令重排
+- volatile 不能保证原子性
+
+JVM 要保证“完全可见性”？由于缓存和指令重排等机制，我们对程序执行顺序和执行结果的预期，可能跟真实的执行顺序和结果并不相同。
+
 
 
