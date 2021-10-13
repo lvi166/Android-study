@@ -114,7 +114,12 @@ Activity设置为SingleTask之后 如果当前Activity实例位于栈顶，则�
 
 > Looper 位置一个无限for循环，不断的从messageQuene中去取message 一旦messageQuene为空则阻塞 
 
-* ## 9.Android
+* ## 9.Android 自定义View流程
+- 自定义View 首先继承自View 重写构造方法，如果有自定义属性
+- 通过onMeasure测量View大小 涉及到MeasureSpec类，通过 MeasureSpac类获取 SpecMode SpecSize MeasureSpac是一个32位的int 值 高两位是 SpacMode 低30位是SpacSize
+- SpecMode 中 AT_MOST相当于 warp_content  EXACTLY 相当于 match_parent  UNSPECIFIED 就是要多大给多大不受父容器控制
+- onSizeChanged 确定View的大小 一半情况下 onMeasure()能确定view的大小 但是view收到父控件的影响，我们还需要重写 onSizeChanged();
+-
 
 
 
