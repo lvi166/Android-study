@@ -1,15 +1,17 @@
 package com.cariad.astudy
 
+import android.graphics.Bitmap
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.view.Menu
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
-import android.view.Menu
-import android.view.MenuItem
 import com.cariad.astudy.databinding.ActivityMainBinding
+import com.cariad.astudy.javas.ImageFormat
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,8 +34,25 @@ class MainActivity : AppCompatActivity() {
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                 .setAction("Action", null)
                 .setAnchorView(R.id.fab).show()
+
+
+
+
+
+
         }
     }
+
+
+    fun test() {
+
+
+        val processor: ImageFormat =
+            ImageFormat(getAssets(), "invert_color.tflite")
+        val invertedBitmap: Bitmap = processor.process(originalBitmap)
+        binding.imageView.setImageBitmap(invertedBitmap)
+    }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
