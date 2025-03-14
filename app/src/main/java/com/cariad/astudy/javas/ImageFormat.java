@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
+import java.util.ArrayList;
 
 public class ImageFormat {
 
@@ -71,6 +72,20 @@ public class ImageFormat {
             }
         }
         return output;
+    }
+
+
+    public static void main(String[] args) {
+
+
+        String data = "qqqqqqqqqq";
+
+        StringBuilder stringBuilder = new StringBuilder();
+
+
+
+
+
     }
 
 

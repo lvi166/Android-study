@@ -9,8 +9,15 @@
 ## 1、计算机、软件工程等相关专业本科及以上学历。
 ## 2、工作经验/本岗位经验：本科学历5-7年工作经验、研究生学历3-5年工作经验、博士学历0-2年工作经验
 ## 3、精通Android或iOS应用开发，有扎实的Java、Kotlin（Android）或Swift、Objective-C（iOS）编程基础。
+  - kotlin的基本数据， int double long float short byte char boolean string
+
 ## 4、熟悉无线通信协议，如蓝牙、Wi-Fi等，有实际的设备互联开发经验。
+- 经典蓝牙的连接流程
+- BLE的连接流程
+- WIFI p2p直连  ap模式连接的流程
+- mqtt协议
 ## 5、具备图像视频处理相关知识，熟悉常见的图像编辑算法和视频编码格式。
+- 
 
 ### 1常见图像编辑算法有哪些
    - 图像反色
