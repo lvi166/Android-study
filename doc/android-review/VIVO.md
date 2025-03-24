@@ -48,6 +48,16 @@
 - 转换为字节流以便于binder传输
 - 内存地址无效，
 
+* ## Synchronized修饰普通方法和静态方法的区别？什么是可见性?
+* ## Synchronized在JDK1.6之后做了哪些优化
+* ## CAS无锁编程的原理
+* ## AQS原理
+* ## ReentrantLock的实现原理
+* ## Synchronized的原理以及与ReentrantLock的区别。
+* ## volatile关键字干了什么？什么叫指令重排，什么叫内存屏障
+* ## volatile 能否保证线程安全？在DCL上的作用是什么？
+* ## volatile和synchronize有什么区别？
+
 * ## 请说一下HashMap与HashTable的区别
 - HashMap的底层数据结构包括 数组 链表 红黑树 当链表结构超过8时候自动转化为红黑树，提升查找效率
 - HashMap的存储方式包括hash值得计算，确定数组的索引，检查是否有hash冲突，
@@ -67,7 +77,17 @@
 * ## 详细介绍一下JAVA的类加载器
 * ## 详细介绍一下JAVA的垃圾回收机制
 * ## JVM、Dalvik、ART三者的原理和区别？
-* ## JMM是什么？它存在哪些问题？该如何解决？
+* ## 描述JVM类加载过程
+* ## 请描述new一个对象的流程
+* ## Java对象会不会分配到栈中？
+* ## GC的流程是怎么样的？介绍下GC回收机制与分代回收策略
+* ## Java中对象如何晋升到老年代？
+* ## 判断对象是否被回收，有哪些GC算法，虚拟机使用最多的是什么算法？
+* ## Class会不会回收？用不到的Class怎么回收？
+* ## Java中有几种引用关系，它们的区别是什么？
+* ## 描述JVM内存模型
+* ## StackOverFlow与OOM的区别？分别发生在什么时候，JVM栈中存储的是什么，堆存储的是什么？
+
 
 # 2. Android基础题
 
