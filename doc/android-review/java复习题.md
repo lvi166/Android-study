@@ -17,18 +17,7 @@
 - Error不可预见，会导致系统崩溃
 - Exception 是可以预料的，通常可以用 try catch捕获 
 
-# 介绍一下 HashMap
-- HashMap的底层数据结构包括 数组 链表 红黑树 当链表结构超过8时候自动转化为红黑树，提升查找效率
-- HashMap的存储方式包括hash值得计算，确定数组的索引，检查是否有hash冲突，
-- 
 
-# 介绍一下 ConcurrentHashMap
-
-
-# 说一说 ArrayList的扩容机制
-- ArrayList 初始默认值10 当添加的元素超过数组容量时，触发扩容机制，将旧数据 ArrayCopy()复制到新数组中
-- 新扩容的区域相当于原来的区域的1.5倍 罗荣所需要的时间复杂度为  O(n)，会有GC压力
-- 如何避免扩容带来的性能损耗， 预设容量，避免频繁调用 add() 如果涉及到频繁的增删，可以使用 LinkedList
 
 
 # 介绍一下 GC ROOT

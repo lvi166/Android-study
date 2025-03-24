@@ -151,7 +151,13 @@ public class JUCT {
             System.out.println(Thread.currentThread().getName() + "=>" + num);
             //通知其他线程，-1执行完毕
             this.notifyAll();
+
+
+
+
         }
+
+        Exception
 
 
 

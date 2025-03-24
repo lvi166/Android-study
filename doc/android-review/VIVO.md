@@ -1,17 +1,71 @@
 # 1. JAVA 基础题
 
 * ## 抽象类与接口的区别？
+- JAVA中的类只能单继承几个抽象类，但是可以实现多个接口
+- 抽象类是一种 is-a的关系，比如鸟类是抽象类，麻雀继承自鸟类 ，接口表示一种 has-a 关系，比如麻雀实现 flyable接口，包含一个 fly()方法
 * ## 分别讲讲 final，static，synchronized关键字可以修饰什么，以及修饰后的作用？
+- final 修饰的关键字表示不可修改，final修饰的变量不可修改，final修饰的方法不可被子类重写，final修饰的类不可北继承
+- static 可以修饰变量，静态方法不依赖类的实例对象调用，不可使用this(),super(),只能调用静态成员，静态代码块在类加载时只执行一次，静态内部类不需要通过外层实例调用，可直接通过类名访问
+- synchronized关键字 1.修饰方法可以为方法加锁，保证多线程访问时同步
+
+* ## 静态内部类和非静态内部类的区别
+- 静态内部类只能访问外部类的静态属性和方法
+- 调用静态内部类可以直接通过类名访问
+- 静态内部类不持有外部类的引用，内存更独立不易发生内存泄露 非静态内部类持有外部类的实例引用，有内存泄露的风险
+- 静态内部类可以做工具类比如 builder模式时候， 非静态内部类与外部类紧密联系，可以做事件监听器
+* ## java传参时候是值传递还是引用传递
+- 基本数据类型为值传递，传递的事数值的副本，不影响原变量
+- 引用数据类型传递的事对象引用地址的副本，修改不影响原有对象，只改变引用指向对象
+* ## JAVA 存在隐式转换
+- char -> int  int->long long -> float float -> double
+
 * ## Java 中深拷贝与浅拷贝的区别？
+- 仅复制对象本身和其中的基本数据类型字段，对引用类型字段仅复制引用地址。
+- 不仅复制对象本身，还递归复制其中的引用类型字段，生成新的对象副本。
+
 * ## 什么是反射机制？反射机制的应用场景有哪些？
-* ## 谈谈如何重写equals()方法？为什么还要重写hashCode()？
+
+* ## 使用equals和==进行比较的区别，为什么要重写 equals()方法，为什么还要重写hashCode()？
+- 基本数据类型 ==比较值 引用数据类型 ==比较内存地址
+- equals() 默认比较对象地址 如果重写 equals() 可以实现内容比较
+- 配合如 hashMap HashSet等集合类，如果不重写 equals() 和 hashcode()方法 会出现 内容相同,被认为是不同的对象的情况，保证一致性
+
+* ## finally中的代码一定会执行吗？try里有return，finally还执行么
+- 不一定总会执行，在程序死循环，crash后，或者System.exit() 就不会执行到这里
+- try里有 return任然会执行 finally()
+
+* ## Java异常机制中，异常Exception与错误Error区别
+- 都是继承自Throwable类
+- Exception表示程序运行中可以捕获处理的异常，error表示程序无法处理的异常
+- 异常抛出后JVM可以继续运行 Error发生后 JVM崩溃
+
+* ## 序列Parcelable,Serializable的区别？
+- 序列化是将对象转换为字节楼的过程，以便于存储到文件或数据库，传输到网络或其他进程，恢复成对象的操作
+- Parcelable是Android特有的序列化接口， 高效用于Android内的数据的传递，但是需要手动实现序列化和反序列化
+- Serializable 性能较低，内存开销大，适合小数据持久化存储
+
+* ## 为什么Intent传递对象为什么需要序列化？
+- 转换为字节流以便于binder传输
+- 内存地址无效，
+
 * ## 请说一下HashMap与HashTable的区别
+- HashMap的底层数据结构包括 数组 链表 红黑树 当链表结构超过8时候自动转化为红黑树，提升查找效率
+- HashMap的存储方式包括hash值得计算，确定数组的索引，检查是否有hash冲突，
+- HashMap
 * ## 谈一谈ArrayList的扩容机制？
+- ArrayList 初始默认值10 当添加的元素超过数组容量时，触发扩容机制，将旧数据 ArrayCopy()复制到新数组中
+- 新扩容的区域相当于原来的区域的1.5倍 扩容所需要的时间复杂度为  O(n)，会有GC压力
+- 如何避免扩容带来的性能损耗， 预设容量，避免频繁调用 add() 如果涉及到频繁的增删，可以使用 LinkedList
 * ## 请简述 LinkedHashMap 的工作原理和使用方式？
+* ## 介绍一下 ConcurrentHashMap
 * ## Java 中使用多线程的方式有哪些？说一下线程的几种状态？
 * ## 谈谈线程死锁，如何有效的避免线程死锁？
 * ## 什么是线程池？如何创建一个线程池？
+
 * ## 谈一谈JAVA垃圾回收机制？
+* ## 详细介绍一下 JAVA的GC root
+* ## 详细介绍一下JAVA的类加载器
+* ## 详细介绍一下JAVA的垃圾回收机制
 * ## JVM、Dalvik、ART三者的原理和区别？
 * ## JMM是什么？它存在哪些问题？该如何解决？
 
@@ -71,6 +125,14 @@
 * ## HandlerThread 的使用场景和用法？
 * ## 谈谈 Handler 机制和原理？
 * ## 试从源码角度分析Handler的post和sendMessage方法的区别和应用场景？
+* - post方法实际上调用的事 sendMessage 方法，通过getPostMessage()存入callback中 最后存储消息队列中
+* - 适合在线程切换中，执行异步任务
+* - sendMessage() 直接把 message存储到MessageQueue中 用于消息分发，线程通信
+
+* ## 详细介绍一下 Handler 消息屏障
+- Handler 发送的消息分为两类 ，一类是同步消息 如SendMessage() 一类是异步消息 sendMessageAtFontOfQueue() 和Handler.setAsynchronous(true)
+- 消息屏障是在消息队列中插入一个屏障，阻止同步消息的处理，确保异步消息的执行，
+- 一般在Android 中，Choreographer
 * ## 谈谈Android的事件分发机制？
 * ## 谈谈自定义View的流程？
 * ## 谈谈你对Android性能优化方面的了解？
@@ -162,7 +224,7 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
 * ## FFMPEG:图片如何合成视频
 * ## 常见的音视频格式有哪些？
 * ## 请叙述MPEG视频基本码流结构？
-* ## 说一说FFmpeg的数据结构？
+* ## 说一说FFMPEG的数据结构？
 * ## 如何降低延迟？如何保证流畅性？如何解决卡顿？解决网络抖动？
 * ## 平时说的软解和硬解，具体是什么？
 
@@ -284,19 +346,32 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
 
 * ## 你了解Android系统启动流程吗？
 * ## system_server 为什么要在 Zygote 中启动，而不是由 init 直接启动呢？
+* - 
 * ## Zygote 为什么不采用 Binder 机制进行 IPC 通信？
+* - Zygote 是在 Binder 
 * ## Binder有什么优势
 * ## Binder是如何做到一次拷贝的
 * ## MMAP的内存映射原理了解吗？
 * ## 说说四大组件的通信机制
 * ## 简述下 Handler 机制的总体原理？
+* - Looper消息循环器 MessageQueue 消息队列存储等待处理的消息队列 Message 需要处理的消息  Handler 负责向 MessageQueue中发送消息并处理分发的消息
+* - 
 * ## Handler 或者说 Looper 如何切换线程？
-* ## Handler、Mesage 和 Runnable 的关系如何理解？
+* ## Handler、Message 和 Runnable 的关系如何理解？
 * ## Handler 为什么可能导致内存泄露？如何避免？
 * ## Handler在系统当中的应用
 * ## ActivityManagerService是什么？什么时候初始化的？有什么作用？
 * ## Instrumentation是什么？和ActivityThread是什么关系？
 * ## ActivityManagerService和zygote进程通信是如何实现的。
+* ## Android 应用的启动流程详解
+- 1. 点击应用图标 AMS 检查应用进程是否存在，如果已经存在，启动对应Activity,如果不存在创建应用进程
+- 2. Zygote  fork出应用进程 新进程会预加载Android核心类 比如 android.app* android.view.*下的 提高启动效率,
+- 3. Zygote调用 RuntimeInit.main() ,初始化 ActivityThread
+
+
+
+* #  8.网络方面
+* ## 1. 浏览器输入地址到显示页面，经历了哪些过程
 
 
 
