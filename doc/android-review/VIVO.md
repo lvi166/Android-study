@@ -49,9 +49,15 @@
 - 内存地址无效，
 
 * ## Synchronized修饰普通方法和静态方法的区别？什么是可见性?
+* - Sync修饰的普通方法锁住的事对象实例 修饰静态方法锁住的是类对象
+* - 因为JMM中有缓存一致性机制原因，需要保证共享变量的修改能被其他线程立即察觉， volatile 和 sync 可以保证可见性，但是 volatile 不能保证原子性
 * ## Synchronized在JDK1.6之后做了哪些优化
-* ## CAS无锁编程的原理
+* ## CAS无锁编程的原理，如何解决ABA 问题
+* - 比如 AtomicInteger 内部先获取当前值，然后通过循环CAS将当前值与预期值比较，如果相等就更新，否则就继续自旋，如果更新后就返回最终更新的值
+* - 基于 Compare and swap 比较并交换 基于底层硬件指令
+* - 通过 AtomicStampedReference 增加版本号，记录修改，可以根据版本号防止误判
 * ## AQS原理
+* - AQS支持两种工作模式 一种是独占模式 一种是共享模式
 * ## ReentrantLock的实现原理
 * ## Synchronized的原理以及与ReentrantLock的区别。
 * ## volatile关键字干了什么？什么叫指令重排，什么叫内存屏障
@@ -62,6 +68,12 @@
 - HashMap的底层数据结构包括 数组 链表 红黑树 当链表结构超过8时候自动转化为红黑树，提升查找效率
 - HashMap的存储方式包括hash值得计算，确定数组的索引，检查是否有hash冲突，
 - HashMap
+
+* ## 请说一下HashMap与HashTable的区别
+* - HashMap是非线程安全的，效率较高  HashTable是线程安全的，使用了 synchronized关键字修饰方法，效率较低
+* - HashMap 基于数组+链表+红黑树的结构实现， HashTable基于 数组+链表
+* - HashMap允许空键空值 HashTable不允许空键空值
+* - hashMap 扩容位翻倍  hashTable位翻倍+1
 * ## 谈一谈ArrayList的扩容机制？
 - ArrayList 初始默认值10 当添加的元素超过数组容量时，触发扩容机制，将旧数据 ArrayCopy()复制到新数组中
 - 新扩容的区域相当于原来的区域的1.5倍 扩容所需要的时间复杂度为  O(n)，会有GC压力
@@ -236,6 +248,8 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
 
 * ## 请简述一下什么是 Kotlin？它有哪些特性？
 * ## Kotlin中实现单例的几种常见方式？
+* ## Kotlin内置标准函数let的原理是什么？
+* -inline实现的内联函数
 * ## Kotlin inline crossinline noinline
 * ## Kotlin高阶函数
 * ## kotlin中 线程和协程有什么区别
@@ -375,14 +389,34 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
  ---
 
 * ## 你了解Android系统启动流程吗？
+* - 按下电源键，电源管理芯片组给设备供电
+* - 启动bootloader,在Uboot中初始化硬件资源，GPIO
+* - 
 * ## system_server 为什么要在 Zygote 中启动，而不是由 init 直接启动呢？
 * - 
 * ## Zygote 为什么不采用 Binder 机制进行 IPC 通信？
 * - Zygote 是在 Binder 
 * ## Binder有什么优势
+* - 相对于传统的二次拷贝，一次拷贝提升了效率，并且减少了cpu和内存的消耗，适合移动端
+* - 权限校验 保证只有合法的进程才能访问共享内存
+* - 内存映射保证数据对齐，Parcel序列化，防止数据被篡改
+* - binder采用引用技术，防止内存泄露
+* ## 常规IPC的过程
+* - 常规IPC通信中，如socket 一般通过 第一次拷贝需要从 用户态到内核态，也就是将用户数据拷贝到内核空间中
+* - 第二次拷贝在接受进程， 从内核态到用户态
+* - 大量数据传输时，性能明显下降
 * ## Binder是如何做到一次拷贝的
+* - binder驱动筒骨 mmap在内核空间创建内存共享区域，用户空间与内存空间共享同一块物理内存，实现零拷贝数据传输
+* 
 * ## MMAP的内存映射原理了解吗？
+* - MMAP是Linux中用于内存文件映射或者设备映射，它将文件或设备映射到虚拟内存空间中，通过内存映射机制，可以在访问内存时候直接操作文件和设备，无需通过传统的 read() write()系统调用进行拷贝
+* - MMAP核心字段  addr 映射的起始地址，传入NULL将由内核自动分配
+* - length 4096
 * ## 说说四大组件的通信机制
+* - 可以通过Intent 跳转传递数据
+* - 使用Bundle 传递数据
+* - Messenger
+* - EventBus
 * ## 简述下 Handler 机制的总体原理？
 * - Looper消息循环器 MessageQueue 消息队列存储等待处理的消息队列 Message 需要处理的消息  Handler 负责向 MessageQueue中发送消息并处理分发的消息
 * - 
@@ -402,6 +436,11 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
 
 * #  8.网络方面
 * ## 1. 浏览器输入地址到显示页面，经历了哪些过程
+
+* # 9.第三方框架
+* ## Eventbus 原理
+* - EventBus 采用注解+反射的方式，实现一种发布订阅者的机制。内部通过HashMap维护事件表，
+
 
 
 
