@@ -24,6 +24,8 @@
 - 不仅复制对象本身，还递归复制其中的引用类型字段，生成新的对象副本。
 
 * ## 什么是反射机制？反射机制的应用场景有哪些？
+* - 反射机制是Java提供的一种运行时动态获取类信息并操作的机制，
+* - Java序列化是一种反射，Android 中view 绑定，插件化
 
 * ## 使用equals和==进行比较的区别，为什么要重写 equals()方法，为什么还要重写hashCode()？
 - 基本数据类型 ==比较值 引用数据类型 ==比较内存地址
@@ -49,9 +51,13 @@
 - 内存地址无效，
 
 * ## Synchronized修饰普通方法和静态方法的区别？什么是可见性?
-* - Sync修饰的普通方法锁住的事对象实例 修饰静态方法锁住的是类对象
+* - Sync修饰的普通方法锁住的是对象实例，不同实例互不影响
+* - 修饰静态方法锁住的是类的 Class对象 所有实例会共用同一把锁
 * - 因为JMM中有缓存一致性机制原因，需要保证共享变量的修改能被其他线程立即察觉， volatile 和 sync 可以保证可见性，但是 volatile 不能保证原子性
 * ## Synchronized在JDK1.6之后做了哪些优化
+* - 偏向锁，无竞争的情况下，避免CAS操作，直接记录现成ID提升性能
+* - 轻量级锁 多线程下尝试加锁，使用CAS竞争，失败则自旋
+* - 竞争激烈时候使用OS级别的 mutex互斥锁，线程进入阻塞
 * ## CAS无锁编程的原理，如何解决ABA 问题
 * - 比如 AtomicInteger 内部先获取当前值，然后通过循环CAS将当前值与预期值比较，如果相等就更新，否则就继续自旋，如果更新后就返回最终更新的值
 * - 基于 Compare and swap 比较并交换 基于底层硬件指令
@@ -59,12 +65,17 @@
 * ## AQS原理
 * - AQS支持两种工作模式 一种是独占模式 一种是共享模式
 * ## ReentrantLock的实现原理
+* - 通过AQS实现的一种，支持可重入，支持公平锁，非公平锁的一种锁
+* - 加锁过程是通过CAS竞争state 如果失败进入等待队列
+* - 解锁过程通过 state--释放锁，唤醒队列
+* - 默认非公平锁，提高性能，支持 公平锁、可中断、条件变量
 * ## Synchronized的原理以及与ReentrantLock的区别。
+* -synchronized 是依赖JVM级别的锁机制，基于对象头+监视器锁实现
 * ## volatile关键字干了什么？什么叫指令重排，什么叫内存屏障
 * ## volatile 能否保证线程安全？在DCL上的作用是什么？
 * ## volatile和synchronize有什么区别？
 
-* ## 请说一下HashMap与HashTable的区别
+* ## 请说一下HashMap 原理
 - HashMap的底层数据结构包括 数组 链表 红黑树 当链表结构超过8时候自动转化为红黑树，提升查找效率
 - HashMap的存储方式包括hash值得计算，确定数组的索引，检查是否有hash冲突，
 - HashMap
@@ -162,8 +173,16 @@
 
 * ## 谈一谈startService和bindService的区别，生命周期以及使用场景？
 * ## 简单介绍下ContentProvider是如何实现数据共享的？
+* ## App的启动流程
+* - 用户点击图标，Launcher 调用AMS 启动Activity
+* - 如果App进城存在，则直接启动对应Activity,如果应用进城不存在，则通过binder调用Zygote fork新进程
+* - 新进程启动ActivityThread 通过attach()注册自己，然后AMS调用scheduleLauncherActivity()启动Activity
+* - AMS通过 Instrumentation创建activity 并调用 onCrate()
+* - Activity OnCreate()执行，OnResume()进入前台，ViewRootImpl通过 Choreogrother触发UI渲染
+* - 最后呈现应用界面
 * ## 说下切换横竖屏时Activity的生命周期?
 * ## 说说Activity加载的流程？
+* - 
 * ## HandlerThread 的使用场景和用法？
 * ## 谈谈 Handler 机制和原理？
 * ## 试从源码角度分析Handler的post和sendMessage方法的区别和应用场景？
@@ -286,6 +305,85 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
 * ## Flutter 如何与 Android iOS 通信？
 * ## 说一下什么是状态管理，为什么需要它？
 
+
+# 7. Android Framework
+
+ ---
+
+* ## 你了解Android系统启动流程吗？
+* - 按下电源键，电源管理芯片组给设备供电
+* - 启动bootloader,在Uboot中初始化硬件资源，GPIO
+* - 
+* ## system_server 为什么要在 Zygote 中启动，而不是由 init 直接启动呢？
+* - 
+* ## Zygote 为什么不采用 Binder 机制进行 IPC 通信？
+* - Zygote 是在 Binder 
+* ## Binder有什么优势
+* - 相对于传统的二次拷贝，一次拷贝提升了效率，并且减少了cpu和内存的消耗，适合移动端
+* - 权限校验 保证只有合法的进程才能访问共享内存
+* - 内存映射保证数据对齐，Parcel序列化，防止数据被篡改
+* - binder采用引用技术，防止内存泄露
+* ## 常规IPC的过程
+* - 常规IPC通信中，如socket 一般通过 第一次拷贝需要从 用户态到内核态，也就是将用户数据拷贝到内核空间中
+* - 第二次拷贝在接受进程， 从内核态到用户态
+* - 大量数据传输时，性能明显下降
+* ## Binder是如何做到一次拷贝的
+* - binder驱动筒骨 mmap在内核空间创建内存共享区域，用户空间与内存空间共享同一块物理内存，实现零拷贝数据传输
+* 
+* ## MMAP的内存映射原理了解吗？
+* - MMAP是Linux中用于内存文件映射或者设备映射，它将文件或设备映射到虚拟内存空间中，通过内存映射机制，可以在访问内存时候直接操作文件和设备，无需通过传统的 read() write()系统调用进行拷贝
+* - MMAP核心字段  addr 映射的起始地址，传入NULL将由内核自动分配
+* - length 4096
+* ## 说说四大组件的通信机制
+* - 可以通过Intent 跳转传递数据
+* - 使用Bundle 传递数据
+* - Messenger
+* - EventBus
+* ## 简述下 Handler 机制的总体原理？
+* - Looper消息循环器 MessageQueue 消息队列存储等待处理的消息队列 Message 需要处理的消息  Handler 负责向 MessageQueue中发送消息并处理分发的消息
+* - 
+* ## Handler 或者说 Looper 如何切换线程？
+* ## Handler、Message 和 Runnable 的关系如何理解？
+* ## Handler 为什么可能导致内存泄露？如何避免？
+* ## Handler在系统当中的应用
+* ## ActivityManagerService是什么？什么时候初始化的？有什么作用？
+* ## Instrumentation是什么？和ActivityThread是什么关系？
+* ## ActivityManagerService和zygote进程通信是如何实现的。
+* ## Android 应用的启动流程详解
+- 1. 点击应用图标 AMS 检查应用进程是否存在，如果已经存在，启动对应Activity,如果不存在创建应用进程
+- 2. Zygote  fork出应用进程 新进程会预加载Android核心类 比如 android.app* android.view.*下的 提高启动效率,
+- 3. Zygote调用 RuntimeInit.main() ,初始化 ActivityThread
+
+
+
+* #  8.网络方面
+* ## 1. 浏览器输入地址到显示页面，经历了哪些过程
+
+* # 9.第三方框架
+* ## Eventbus 原理
+* - EventBus 采用注解+反射的方式，实现一种发布订阅者的机制。内部通过HashMap维护事件表，
+
+
+* ## 如何实现快排
+
+（双指针划分）
+i 从 左往右 找 大于 pivot 的元素。
+j 从 右往左 找 小于 pivot 的元素。
+交换 i 和 j 直到 i ≥ j，最后交换 pivot。
+交换 i 和 j，保证 pivot 左侧全是小值，右侧全是大值。
+适用于 大量重复数据，降低不必要的交换次数。
+
+* ## 如何实现二分查找
+二分查找是一种高效的查找算法，适用于有序数组，时间复杂度 O(log n)。
+基本原理：
+选取中间元素 作为基准 (mid)。
+比较目标值 (target)：
+target == mid，返回索引。
+target < mid，缩小到左半部分。
+target > mid，缩小到右半部分。
+重复步骤 1-2，直到找到 target 或区间无效。
+
+
 # 6. 算法方面
 
 * ## 如何运⽤⼆分查找算法
@@ -372,74 +470,18 @@ Alert类型的Dialog），因此在这种场景下，我们只能使用Activity�
 ### 🛠️ **附加题型**
 
 - **位运算**
-    - **只出现一次的数字**：数组中只有一个数字出现一次，其余数字出现两次，找到出现一次的数字。（LeetCode
-      136）
-    - **汉明距离**：两个整数的二进制表示不同位的数量。（LeetCode 461）
+  - **只出现一次的数字**：数组中只有一个数字出现一次，其余数字出现两次，找到出现一次的数字。（LeetCode
+    136）
+  - **汉明距离**：两个整数的二进制表示不同位的数量。（LeetCode 461）
 
 - **数学题**
-    - **FizzBuzz**：打印 `1` 到 `n`，`3` 的倍数打印 `Fizz`，`5` 的倍数打印 `Buzz`，同时是 `3 和 5`
-      的倍数打印 `FizzBuzz`。（LeetCode 412）
-    - **整数反转**：将整数反转输出。（LeetCode 7）
-    - **回文数**：判断整数是否为回文数。（LeetCode 9）
+  - **FizzBuzz**：打印 `1` 到 `n`，`3` 的倍数打印 `Fizz`，`5` 的倍数打印 `Buzz`，同时是 `3 和 5`
+    的倍数打印 `FizzBuzz`。（LeetCode 412）
+  - **整数反转**：将整数反转输出。（LeetCode 7）
+  - **回文数**：判断整数是否为回文数。（LeetCode 9）
 
 ---
 
-# 7. Android Framework
-
- ---
-
-* ## 你了解Android系统启动流程吗？
-* - 按下电源键，电源管理芯片组给设备供电
-* - 启动bootloader,在Uboot中初始化硬件资源，GPIO
-* - 
-* ## system_server 为什么要在 Zygote 中启动，而不是由 init 直接启动呢？
-* - 
-* ## Zygote 为什么不采用 Binder 机制进行 IPC 通信？
-* - Zygote 是在 Binder 
-* ## Binder有什么优势
-* - 相对于传统的二次拷贝，一次拷贝提升了效率，并且减少了cpu和内存的消耗，适合移动端
-* - 权限校验 保证只有合法的进程才能访问共享内存
-* - 内存映射保证数据对齐，Parcel序列化，防止数据被篡改
-* - binder采用引用技术，防止内存泄露
-* ## 常规IPC的过程
-* - 常规IPC通信中，如socket 一般通过 第一次拷贝需要从 用户态到内核态，也就是将用户数据拷贝到内核空间中
-* - 第二次拷贝在接受进程， 从内核态到用户态
-* - 大量数据传输时，性能明显下降
-* ## Binder是如何做到一次拷贝的
-* - binder驱动筒骨 mmap在内核空间创建内存共享区域，用户空间与内存空间共享同一块物理内存，实现零拷贝数据传输
-* 
-* ## MMAP的内存映射原理了解吗？
-* - MMAP是Linux中用于内存文件映射或者设备映射，它将文件或设备映射到虚拟内存空间中，通过内存映射机制，可以在访问内存时候直接操作文件和设备，无需通过传统的 read() write()系统调用进行拷贝
-* - MMAP核心字段  addr 映射的起始地址，传入NULL将由内核自动分配
-* - length 4096
-* ## 说说四大组件的通信机制
-* - 可以通过Intent 跳转传递数据
-* - 使用Bundle 传递数据
-* - Messenger
-* - EventBus
-* ## 简述下 Handler 机制的总体原理？
-* - Looper消息循环器 MessageQueue 消息队列存储等待处理的消息队列 Message 需要处理的消息  Handler 负责向 MessageQueue中发送消息并处理分发的消息
-* - 
-* ## Handler 或者说 Looper 如何切换线程？
-* ## Handler、Message 和 Runnable 的关系如何理解？
-* ## Handler 为什么可能导致内存泄露？如何避免？
-* ## Handler在系统当中的应用
-* ## ActivityManagerService是什么？什么时候初始化的？有什么作用？
-* ## Instrumentation是什么？和ActivityThread是什么关系？
-* ## ActivityManagerService和zygote进程通信是如何实现的。
-* ## Android 应用的启动流程详解
-- 1. 点击应用图标 AMS 检查应用进程是否存在，如果已经存在，启动对应Activity,如果不存在创建应用进程
-- 2. Zygote  fork出应用进程 新进程会预加载Android核心类 比如 android.app* android.view.*下的 提高启动效率,
-- 3. Zygote调用 RuntimeInit.main() ,初始化 ActivityThread
-
-
-
-* #  8.网络方面
-* ## 1. 浏览器输入地址到显示页面，经历了哪些过程
-
-* # 9.第三方框架
-* ## Eventbus 原理
-* - EventBus 采用注解+反射的方式，实现一种发布订阅者的机制。内部通过HashMap维护事件表，
 
 
 
