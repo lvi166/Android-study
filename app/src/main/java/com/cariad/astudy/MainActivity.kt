@@ -1,6 +1,7 @@
 package com.cariad.astudy
 
 import android.graphics.Bitmap
+import android.opengl.GLSurfaceView
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -40,7 +41,18 @@ class MainActivity : AppCompatActivity() {
 
 
 
+
+
         }
+
+
+        GLSurfaceView(this).also {
+            it.setEGLContextClientVersion(2)
+            it.setRenderer(MyRenderer())
+            setContentView(it)
+        }
+
+        requestPermissions()
     }
 
 
