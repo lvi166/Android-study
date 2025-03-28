@@ -41,6 +41,13 @@ class ScopeFunc {
             Log.d(TAG, "letFun: ${it.name}")
         }
 
+
+
+    }
+
+    inline fun <T,R>T.let(block:(T)->R):R{
+
+        return block(this)
     }
 
     fun runFun(){

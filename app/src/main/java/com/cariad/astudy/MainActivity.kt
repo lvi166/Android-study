@@ -1,8 +1,10 @@
 package com.cariad.astudy
 
+import android.content.IntentFilter
 import android.graphics.Bitmap
-import android.opengl.GLSurfaceView
 import android.os.Bundle
+import android.os.Handler
+import android.os.MessageQueue
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -41,18 +43,10 @@ class MainActivity : AppCompatActivity() {
 
 
 
-
-
         }
 
 
-        GLSurfaceView(this).also {
-            it.setEGLContextClientVersion(2)
-            it.setRenderer(MyRenderer())
-            setContentView(it)
-        }
 
-        requestPermissions()
     }
 
 
