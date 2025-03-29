@@ -22,3 +22,4 @@ Binder 是Android提供的一种 IPC框架，用来多进程之间发送消息�
 Android Binder机制是一种 client Server 结构，由 client Server ServiceManager Binder驱动构成
 - 第一步获取服务，cliend 需要请求服务，通过ServiceManager 从 svc_list中查抄相关服务
 - 第二步 注册服务，service 通过ServiceManagerNative
+

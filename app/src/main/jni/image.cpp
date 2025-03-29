@@ -1,11 +1,6 @@
 #include <jni.h>
 #include <android/bitmap.h>
-#include <android/log.h>
-#include <android/native_window_jni.h>
 #include <cmath>
-
-#define LOG_TAG "navtive-lib"
-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, __VA_ARGS__)
 
 extern "C" {
 
@@ -111,89 +106,5 @@ JNIEXPORT void JNICALL Java_com_example_NativeImageProcessor_adjustContrast(JNIE
     AndroidBitmap_unlockPixels(env, bitmap);
 }
 
+} // extern "C"
 
-JNIEXPORT jobject JNICALL Java_com_cariad_astudy_getBitmap(JNIEnv *env, jclass clazz, jobject bitmap) {
-    return bitmap;
-}
-
-}
-
-
-
-
-
-jint JNI_OnLoad(JavaVM* vm, void* reserved) {
-    return JNI_VERSION_1_6;
-
-}
-
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_cariad_astudy_JNILib_stringFromJNI(JNIEnv *env, jobject thiz) {
-    // TODO: implement stringFromJNI()
-}
-extern "C"
-JNIEXPORT jstring JNICALL
-Java_com_cariad_astudy_JNILib_test(JNIEnv *env, jobject thiz) {
-    // TODO: implement test()
-}
-extern "C"
-JNIEXPORT jobject JNICALL
-Java_com_cariad_astudy_JNILib_invertColor(JNIEnv *env, jobject thiz, jobject originalBitmap,
-                                          jobject invertedBitmap) {
-    AndroidBitmapInfo info;
-    int ret;
-
-    // 获取原始 Bitmap 的信息
-    if ((ret = AndroidBitmap_getInfo(env, originalBitmap, &info)) < 0) {
-        return NULL;
-    }
-    // 目前仅支持 ARGB_8888 格式
-    if (info.format != ANDROID_BITMAP_FORMAT_RGBA_8888) {
-        return NULL;
-    }
-
-    // 锁定原始 Bitmap 的像素数据
-    void* origPixels;
-    if ((ret = AndroidBitmap_lockPixels(env, originalBitmap, &origPixels)) < 0) {
-        return NULL;
-    }
-
-    // 锁定目标 Bitmap 的像素数据
-    void* invPixels;
-    if ((ret = AndroidBitmap_lockPixels(env, invertedBitmap, &invPixels)) < 0) {
-        AndroidBitmap_unlockPixels(env, originalBitmap);
-        return NULL;
-    }
-
-    // 将像素数据转换为 32 位整数数组（每个像素 4 字节）
-    uint32_t* orig = (uint32_t*) origPixels;
-    uint32_t* inv = (uint32_t*) invPixels;
-    int width = info.width;
-    int height = info.height;
-    int size = width * height;
-
-    // 遍历每个像素，反转 RGB 分量（保留 Alpha）
-    for (int i = 0; i < size; i++) {
-        uint32_t pixel = orig[i];
-        uint8_t a = (pixel >> 24) & 0xFF;
-        uint8_t r = (pixel >> 16) & 0xFF;
-        uint8_t g = (pixel >> 8) & 0xFF;
-        uint8_t b = pixel & 0xFF;
-
-        // 颜色反转：RGB = 255 - 原值
-        r = 255 - r;
-        g = 255 - g;
-        b = 255 - b;
-
-        // 重新组合像素值
-        inv[i] = (a << 24) | (r << 16) | (g << 8) | b;
-    }
-
-    // 解锁像素数据
-    AndroidBitmap_unlockPixels(env, originalBitmap);
-    AndroidBitmap_unlockPixels(env, invertedBitmap);
-
-    // 返回修改后的 Bitmap 对象
-    return invertedBitmap;
-}
